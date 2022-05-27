@@ -1,5 +1,7 @@
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -7,16 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class updateMenuServlet
+ * Servlet implementation class addIncomeServlet
  */
-@WebServlet("/updateMenu")
-public class updateMenuServlet extends HttpServlet {
+@WebServlet("/addIncome")
+public class addIncomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public updateMenuServlet() {
+	public addIncomeServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -27,12 +29,20 @@ public class updateMenuServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println(request.getParameter("menuName")+" "+
-				Integer.parseInt(request.getParameter("menuPrice"))+" "+Integer.parseInt(request.getParameter("seqNo")));
-		menuDTO mDTO = new menuDTO(request.getParameter("menuName"),
-				Integer.parseInt(request.getParameter("menuPrice")),Integer.parseInt(request.getParameter("seqNo")));
-		menuDAO mDAO = new menuDAO();
-		mDAO.updateMenu(mDTO);
+		System.out.println("addIncomeServlet ¹ßµ¿");
+		String mobile = request.getParameter("mobile");
+		int seqNo = Integer.parseInt(request.getParameter("seqNo"));
+		int qty = Integer.parseInt(request.getParameter("menuCount"));
+		String price = request.getParameter("totalPrice");
+		String income_date = request.getParameter("todayDate");
+		IncomeDTO iDTO = new IncomeDTO(mobile, seqNo, qty, price, income_date);
+		IncomeDAO iDAO = new IncomeDAO();
+		try {
+			iDAO.addIncome(iDTO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

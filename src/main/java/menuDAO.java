@@ -69,13 +69,19 @@ public class menuDAO {
 		try {
 			connDB();
 			String query = "insert into menu values(sq.nextval,?,?)";
+			String query2 = "insert into menu1 values(sq2.nextval,?,?)";
 			PreparedStatement psmt = conn.prepareStatement(query);
+			PreparedStatement psmt2 = conn.prepareStatement(query2);
 
 			psmt.setString(1, mDTO.getMenuName());
 			psmt.setInt(2, mDTO.getMenuPrice());
+			psmt2.setString(1, mDTO.getMenuName());
+			psmt2.setInt(2, mDTO.getMenuPrice());
 
 			psmt.executeUpdate();
+			psmt2.executeUpdate();
 			psmt.close();
+			psmt2.close();
 			conn.close();
 
 		} catch (Exception e) {
