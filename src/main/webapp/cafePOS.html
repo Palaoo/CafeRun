@@ -114,14 +114,13 @@
 <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 <script>
 	let netprice = 0;
-	let arMenu2 = {
-
-	};
+	let arMenu2 = new Array();
 	$(document).ready(UpdateMenu()).on('click', '#btnAdd', function() {
 		if ($('#_name').val() == '' || $('#_price').val() == '')
 			return false;
 		if ($('#btnAdd').val() == 'Update') {
-			UpdateMenuList($('#_name').val(), $('#_price').val())
+			UpdateMenuList($('#_name').val(), $('#_price').val(),$('#selMenu1 option:selected').val())
+			console.log('updateMenuList 발동'+$('#selMenu1 option:selected').val())
 		} else {
 			arMenu2[$('#_name').val()] = $('#_price').val();
 			addMenuList($('#_name').val(), $('#_price').val());
@@ -131,6 +130,7 @@
 		return false;
 	}).on('click', '#selMenu1 option:selected', function() {
 		let arr = $(this).text().split(',');
+		console.log($(this).val())
 		$('#_name').prop('readonly', true)
 		$('#btnAdd').val('Update')
 		$('#_name').val(arr[0]);
@@ -161,7 +161,7 @@
 			return false;
 		console.log($('#selMenu1 option:selected'))
 		delete arMenu2[$('#selMenu1 option:selected').text().split(',')[0]];
-		deleteMenu($('#selMenu1 option:selected').text().split(',')[0]);
+		deleteMenu($('#selMenu1 option:selected').val());
 		UpdateDialog();
 		$('#btnRemove').trigger('click');
 		return false;
@@ -230,12 +230,16 @@
 			data : '',
 			dataType : 'text',
 			success : function(data) {
+				$('#selMenu1').empty()
 				let arrTemp = data.split(',');
 				for (let i = 0; i < arrTemp.length; i++) {
 					let a = arrTemp[i].split(':')
-					arMenu2[a[0]] = a[1]
+					$('#selMenu1')
+							.append(
+									`<option value="${a[2]}">${a[0]}, ${a[1]}</option>`);
+					arMenu2[`${a[0]}`] = `${a[1]}`;
 				}
-				UpdateDialog();
+				console.log(arMenu2)
 			},
 			error : function() {
 			},
@@ -247,13 +251,14 @@
 		$('#dvMenu').dialog('close');
 	})
 
-	function UpdateMenuList(menuName, menuPrice) {
+	function UpdateMenuList(menuName, menuPrice,seqNo) {
 		$.ajax({
 			type : 'get',
 			url : 'updateMenu',
 			data : {
 				'menuName' : menuName,
-				'menuPrice' : menuPrice
+				'menuPrice' : menuPrice,
+				'seqNo':seqNo
 			},
 			success : function() {
 			},
@@ -283,12 +288,12 @@
 		})
 	}
 
-	function deleteMenu(menuName) {
+	function deleteMenu(seqNo) {
 		$.ajax({
 			type : 'get',
 			url : 'deleteMenu',
 			data : {
-				'menuName' : menuName
+				'seqNo' : seqNo
 			},
 			success : function() {
 			},
@@ -320,7 +325,6 @@
 	}
 
 	function UpdateMenu() {
-		console.log(arMenu2)
 		$('#selMenu').empty();
 		$
 				.ajax({
@@ -334,10 +338,10 @@
 							let a = arrTemp[i].split(':')
 							$('#selMenu')
 									.append(
-											`<option value="${a[0]}">${a[0]}, ${a[1]}</option>`);
-							arMenu2[a[0]] = a[1];
+											`<option value="${a[2]}">${a[0]}, ${a[1]}</option>`);
+							this.arMenu2[`${a[0]}`]=[`${a[1]}`,`${a[2]}`];
 						}
-						console.log(arMenu2);
+							console.log(arMenu2)
 					},
 					error : function() {
 						alert('ready 실패')

@@ -37,7 +37,7 @@ public class getMenuList extends HttpServlet {
 		for (int i = 0; i < list.size(); i++) {
 			menuDTO data = new menuDTO();
 			data = list.get(i);
-			outstr.append(data.getMenuName() + ":" + data.getMenuPrice());
+			outstr.append(data.getMenuName() + ":" + data.getMenuPrice()+":"+data.getSeqNo());
 			if (i != list.size() - 1)
 				outstr.append(",");
 		}

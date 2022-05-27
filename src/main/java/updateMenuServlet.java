@@ -28,7 +28,7 @@ public class updateMenuServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		menuDTO mDTO = new menuDTO(request.getParameter("menuName"),
-				Integer.parseInt(request.getParameter("menuPrice")));
+				Integer.parseInt(request.getParameter("menuPrice")),Integer.parseInt(request.getParameter("seqNo")));
 		menuDAO mDAO = new menuDAO();
 		mDAO.updateMenu(mDTO);
 	}

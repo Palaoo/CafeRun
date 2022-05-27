@@ -10,11 +10,11 @@ public class menuDAO {
 	private Statement stmt;
 	private Connection conn;
 
-	public int searchMenu(String menuName) {
+	public int searchMenu(int seqNo) {
 		int result = 0;
 		try {
 			connDB();
-			String query = "select name from menu where name='" + menuName + "'";
+			String query = "select name from menu where seqno=" + seqNo + "";
 			System.out.println(query);
 			this.stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -35,17 +35,14 @@ public class menuDAO {
 	public void updateMenu(menuDTO mDTO) {
 		try {
 			connDB();
-			String query = "select menu set price=? where name=?";
+			String query = "update menu set name=?,price=? where seqno=?";
 			int seqno = 0;
 
-			if ((seqno = searchMenu(mDTO.getMenuName())) == 0) {
-				System.out.println("해당하는 메뉴가 DB에 존재하지 않아 수정이 불가합니다.");
-			}
 
-			query = "update menu set price=? where seqno=?";
 			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, mDTO.getMenuPrice());
-			pstmt.setInt(2, seqno);
+			pstmt.setString(1, mDTO.getMenuName());
+			pstmt.setInt(2, mDTO.getMenuPrice());
+			pstmt.setInt(3, mDTO.getSeqNo());
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -54,12 +51,12 @@ public class menuDAO {
 		}
 	}
 
-	public void deleteMenu(String menuName) {
+	public void deleteMenu(int seqNo) {
 		try {
 			connDB();
-			String query = "delete from menu where name=(?)";
+			String query = "delete from menu where seqno=?";
 			PreparedStatement pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, menuName);
+			pstmt.setInt(1, seqNo);
 			pstmt.executeUpdate();
 			pstmt.close();
 			conn.close();
@@ -96,9 +93,11 @@ public class menuDAO {
 			while (rs.next()) {
 				String menuName = rs.getString("name");
 				int menuPrice = rs.getInt("price");
+				int seqNo = rs.getInt("seqno");
 				menuDTO mDTO = new menuDTO();
 				mDTO.setMenuName(menuName);
 				mDTO.setMenuPrice(menuPrice);
+				mDTO.setSeqNo(seqNo);
 				list.add(mDTO);
 			}
 			rs.close();

@@ -28,7 +28,7 @@ public class deleteMenuServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		menuDAO mDAO = new menuDAO();
-		mDAO.deleteMenu(request.getParameter("menuName"));
+		mDAO.deleteMenu(Integer.parseInt(request.getParameter("seqNo")));
 	}
 
 	/**
