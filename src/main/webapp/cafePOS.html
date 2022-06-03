@@ -9,8 +9,18 @@
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 </head>
 
+<style>
+	.div1 {
+		background-color: rgb(255, 192, 203);
+	}
+
+	.div2 {
+		background-color: rgb(205, 209, 255);
+	}
+</style>
+
 <body>
-	<table style="width: 100%; border-collapse: collapse;">
+	<table style="width: 100%; border-collapse: collapse;" class="div1">
 		<tr>
 			<td style="width: 33%; border: 1px solid black;; vertical-align: top;">
 				<table style="width: 100%">
@@ -240,21 +250,24 @@
 				let today = dt.getFullYear() + '-'
 					+ (dt.getMonth() + 1) + '-' + dt.getDate()
 					+ ' ' + dt.getHours() + ':' + dt.getMinutes();
+				let totalprice = parseInt($('#lblSales').text());
 				for (let i = 0; i < $('#selOrder option').length; i++) {
 					console.log($(`#selOrder option:eq(${i})`).text())
 					let a = $(`#selOrder option:eq(${i})`).text()
 						.split(', ')
 					let str = '<option>' + $('#mobile').val() + ' '
-						+ a[0] + ' ' + a[1] + ' ' + a[2] +' '+today;
+						+ a[0] + ' ' + a[1] + ' ' + a[2] + ' ' + today;
+					totalprice += parseInt(a[2])
 					$('#selSales').append(str);
 					a[3] = $('#mobile').val()
 					a[0] = $(`#selOrder option:eq(${i})`).val();
 					a[4] = today;
 					addIncome(a);
 				}
+				$('#lblSales').text(totalprice)
 				// let str = '<option>' + today + ' ' + $('#mobile').val() + ', '
 				// + $('#total').val() + '</option>';
-				
+
 				// $('#lblSales').text(sum);
 				$('#btnClear').trigger('click');
 				return false;
@@ -416,14 +429,14 @@
 			data: '',
 			dataType: 'text',
 			success: function (data) {
-				let arrTemp=data.split(',');
-				let sum1=0;
-				if(arrTemp[0]!='')
-				for(let i=0;i<arrTemp.length;i++){
-					let a=arrTemp[i].split(':');
-					$('#selSales').append(`<option value=>${a[0]} ${a[1]} ${a[2]} ${a[3]} ${a[4]}:${a[5]}`)
-						sum1+=parseInt(a[3])
-				}
+				let arrTemp = data.split(',');
+				let sum1 = 0;
+				if (arrTemp[0] != '')
+					for (let i = 0; i < arrTemp.length; i++) {
+						let a = arrTemp[i].split(':');
+						$('#selSales').append(`<option value=>${a[0]} ${a[1]} ${a[2]} ${a[3]} ${a[4]}:${a[5]}`)
+						sum1 += parseInt(a[3])
+					}
 				let sum = parseInt($('#lblSales').text())
 					+ sum1;
 				$('#lblSales').text(sum);
